@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * The interface Soul client.
+ *  注解类，表示要注册到网关的服务标识
  *
  * @author xiaoyu
  */

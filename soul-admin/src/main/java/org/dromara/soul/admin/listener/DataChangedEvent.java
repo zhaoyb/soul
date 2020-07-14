@@ -25,6 +25,7 @@ import java.util.List;
 
 /**
  * Data change event.
+ * 事件  需要继承ApplicationEvent
  *
  * @author huangxiaofeng
  * @author xiaoyu

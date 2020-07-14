@@ -36,6 +36,9 @@ import org.springframework.stereotype.Component;
 /**
  * for execute schema sql file.
  *
+ * 为了执行sql
+ * InstantiationAwareBeanPostProcessor 用于类实例化阶段
+ *
  * @author huangxiaofeng
  */
 @Component
@@ -47,6 +50,7 @@ public class LocalDataSourceLoader implements InstantiationAwareBeanPostProcesso
     
     @Override
     public Object postProcessAfterInitialization(@NonNull final Object bean, final String beanName) throws BeansException {
+        // 如果实例化的类是DataSourceProperties，即数据库连接配置已经实例化，就开始执行sql建表语句
         if (bean instanceof DataSourceProperties) {
             this.init((DataSourceProperties) bean);
         }
@@ -59,11 +63,18 @@ public class LocalDataSourceLoader implements InstantiationAwareBeanPostProcesso
         // because the soul database does not need to be specified when executing the SQL file,
         // otherwise the soul database will be disconnected when the soul database does not exist
         String jdbcUrl = StringUtils.replace(properties.getUrl(), "/soul?", "?");
+        // 数据库连接
         Connection connection = DriverManager.getConnection(jdbcUrl, properties.getUsername(), properties.getPassword());
         this.execute(connection);
         
     }
-    
+
+    /**
+     *  执行sql脚本
+     *
+     * @param conn
+     * @throws Exception
+     */
     private void execute(final Connection conn) throws Exception {
         ScriptRunner runner = new ScriptRunner(conn);
         // doesn't print logger

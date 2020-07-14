@@ -30,6 +30,9 @@ import java.net.UnknownHostException;
 /**
  * ApplicationStartListener.
  *
+ * ApplicationListener 应用启动，获取应用的IP和端口
+ *
+ *
  * @author xiaoyu
  */
 @Component

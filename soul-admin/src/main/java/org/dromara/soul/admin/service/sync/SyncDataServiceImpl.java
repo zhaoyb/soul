@@ -93,6 +93,13 @@ public class SyncDataServiceImpl implements SyncDataService {
         this.metaDataService = metaDataService;
     }
 
+    /**
+     *
+     * 同步所有插件信息
+     *
+     * @param type the type
+     * @return
+     */
     @Override
     public boolean syncAll(final DataEventTypeEnum type) {
         appAuthService.syncData();
@@ -106,15 +113,26 @@ public class SyncDataServiceImpl implements SyncDataService {
         return true;
     }
 
+    /**
+     *
+     *  同步指定插件信息
+     *
+     * @param pluginId the plugin id
+     * @return
+     */
     @Override
     public boolean syncPluginData(final String pluginId) {
+        // 从数据库中查出插件信息
         PluginVO pluginVO = pluginService.findById(pluginId);
+        // 利用 ApplicationEventPublisher 发送消息
         eventPublisher.publishEvent(new DataChangedEvent(ConfigGroupEnum.PLUGIN, DataEventTypeEnum.UPDATE,
                 Collections.singletonList(PluginTransfer.INSTANCE.mapDataTOVO(pluginVO))));
+        // 选择器
         List<SelectorData> selectorDataList = selectorService.findByPluginId(pluginId);
         if (CollectionUtils.isNotEmpty(selectorDataList)) {
             eventPublisher.publishEvent(new DataChangedEvent(ConfigGroupEnum.SELECTOR, DataEventTypeEnum.REFRESH, selectorDataList));
             for (SelectorData selectData : selectorDataList) {
+                // 规则
                 List<RuleData> ruleDataList = ruleService.findBySelectorId(selectData.getId());
                 eventPublisher.publishEvent(new DataChangedEvent(ConfigGroupEnum.RULE, DataEventTypeEnum.REFRESH, ruleDataList));
             }

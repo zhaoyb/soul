@@ -47,6 +47,7 @@ public class ApacheDubboServiceBeanPostProcessor implements BeanPostProcessor, A
     
     @Override
     public Object postProcessBeforeInitialization(final Object bean, final String beanName) throws BeansException {
+        // 判断是否是dubbo ServiceBean
         if (bean instanceof ServiceBean) {
             executorService.execute(() -> handler((ServiceBean) bean));
         }
@@ -64,27 +65,36 @@ public class ApacheDubboServiceBeanPostProcessor implements BeanPostProcessor, A
                 return;
             }
         }
+        // 获取所有方法
         final Method[] methods = ReflectionUtils.getUniqueDeclaredMethods(clazz);
         for (Method method : methods) {
+            //获取方法上的注解
             SoulDubboClient soulDubboClient = method.getAnnotation(SoulDubboClient.class);
             if (Objects.nonNull(soulDubboClient)) {
+                // 如果存在注解，则开始注册服务
                 post(buildJsonParams(serviceBean, soulDubboClient, method));
             }
         }
     }
     
     private String buildJsonParams(final ServiceBean serviceBean, final SoulDubboClient soulDubboClient, final Method method) {
+        // 应用名称
         String appName = dubboConfig.getAppName();
         if (appName == null || "".equals(appName)) {
             appName = serviceBean.getApplication().getName();
         }
+        // path
         String path = dubboConfig.getContextPath() + soulDubboClient.path();
+        // desc
         String desc = soulDubboClient.desc();
+        // servicename
         String serviceName = serviceBean.getInterface();
+        // rule
         String configRuleName = soulDubboClient.ruleName();
         String ruleName = ("".equals(configRuleName)) ? path : configRuleName;
         String methodName = method.getName();
         Class<?>[] parameterTypesClazz = method.getParameterTypes();
+        // method param
         String parameterTypes = Arrays.stream(parameterTypesClazz).map(Class::getName)
                 .collect(Collectors.joining(","));
         MetaDataDTO metaDataDTO = MetaDataDTO.builder()
@@ -100,6 +110,7 @@ public class ApacheDubboServiceBeanPostProcessor implements BeanPostProcessor, A
                 .rpcType("dubbo")
                 .enabled(soulDubboClient.enabled())
                 .build();
+        // return json
         return OkHttpTools.getInstance().getGosn().toJson(metaDataDTO);
         
     }
@@ -115,7 +126,11 @@ public class ApacheDubboServiceBeanPostProcessor implements BeanPostProcessor, A
         return OkHttpTools.getInstance().getGosn().toJson(build);
         
     }
-    
+
+    /**
+     *  post admin
+     * @param json
+     */
     private void post(final String json) {
         try {
             String result = OkHttpTools.getInstance().post(url, json);

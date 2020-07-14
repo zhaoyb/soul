@@ -71,8 +71,11 @@ public class RedisRateLimiter {
         if (!this.initialized.get()) {
             throw new IllegalStateException("RedisRateLimiter is not initialized");
         }
+        // 缓存Key
         List<String> keys = getKeys(id);
+        // 参数
         List<String> scriptArgs = Arrays.asList(replenishRate + "", burstCapacity + "", Instant.now().getEpochSecond() + "", "1");
+        // 运行脚本
         Flux<List<Long>> resultFlux = Singleton.INST.get(ReactiveRedisTemplate.class).execute(this.script, keys, scriptArgs);
         return resultFlux.onErrorResume(throwable -> Flux.just(Arrays.asList(1L, -1L)))
                 .reduce(new ArrayList<Long>(), (longs, l) -> {

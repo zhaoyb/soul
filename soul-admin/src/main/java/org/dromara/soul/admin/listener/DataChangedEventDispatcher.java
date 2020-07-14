@@ -34,6 +34,7 @@ import java.util.List;
 
 /**
  * Event forwarders, which forward the changed events to each ConfigEventListener.
+ * 事件转发， 所谓同步，就是利用ApplicationEventPublisher 发送事件，在这里接收处理
  *
  * @author huangxiaofeng
  * @author xiaoyu
@@ -49,10 +50,18 @@ public class DataChangedEventDispatcher implements ApplicationListener<DataChang
         this.applicationContext = applicationContext;
     }
 
+    /**
+     *
+     * 事件接受
+     *
+     * @param event
+     */
     @Override
     @SuppressWarnings("unchecked")
     public void onApplicationEvent(final DataChangedEvent event) {
+        // 对所有的监听者广播
         for (DataChangedListener listener : listeners) {
+            // 针对不同的时间，使用不同的处理逻辑
             switch (event.getGroupKey()) {
                 case APP_AUTH:
                     listener.onAppAuthChanged((List<AppAuthData>) event.getSource(), event.getEventType());
