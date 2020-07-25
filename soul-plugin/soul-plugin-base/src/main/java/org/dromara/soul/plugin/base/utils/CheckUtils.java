@@ -48,6 +48,7 @@ public class CheckUtils {
      * @return the mono
      */
     public static Mono<Void> checkSelector(final String pluginName, final ServerWebExchange exchange, final SoulPluginChain chain) {
+        // 如果是下面的插件，并且还路由规则，就直接抛异常
         if (PluginEnum.DIVIDE.getName().equals(pluginName)
                 || PluginEnum.DUBBO.getName().equals(pluginName)
                 || PluginEnum.SPRING_CLOUD.getName().equals(pluginName)) {
@@ -55,6 +56,7 @@ public class CheckUtils {
             Object error = SoulResultWarp.error(SoulResultEnum.CANNOT_FIND_SELECTOR.getCode(), SoulResultEnum.CANNOT_FIND_SELECTOR.getMsg(), null);
             return WebFluxResultUtils.result(exchange, error);
         }
+        // 否则执行
         return chain.execute(exchange);
     }
 

@@ -26,6 +26,14 @@ public final class HealthFilter implements WebFilter {
 
     private static final String[] FILTER_TAG = {"/actuator/health", "/health_check"};
 
+    /**
+     *  健康检查
+     *
+     *
+     * @param exchange
+     * @param chain
+     * @return
+     */
     @Override
     public Mono<Void> filter(@Nullable final ServerWebExchange exchange, @Nullable final WebFilterChain chain) {
         ServerHttpRequest request = Objects.requireNonNull(exchange).getRequest();

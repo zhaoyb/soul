@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
 /**
  * for execute schema sql file.
  *
- * 为了执行sql
+ * 为了执行初始化sql脚本
  * InstantiationAwareBeanPostProcessor 用于类实例化阶段
  *
  * @author huangxiaofeng

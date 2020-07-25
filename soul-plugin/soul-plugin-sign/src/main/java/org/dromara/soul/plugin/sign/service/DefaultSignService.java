@@ -50,7 +50,11 @@ import java.util.Objects;
  */
 @Slf4j
 public class DefaultSignService implements SignService {
-    
+
+    /**
+     * 时间差
+     *
+     */
     @Value("${soul.sign.delay:5}")
     private int delay;
     

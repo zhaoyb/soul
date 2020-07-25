@@ -17,6 +17,10 @@
 
 package org.dromara.soul.admin.listener;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import org.dromara.soul.common.dto.AppAuthData;
 import org.dromara.soul.common.dto.MetaData;
 import org.dromara.soul.common.dto.PluginData;
@@ -26,11 +30,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Event forwarders, which forward the changed events to each ConfigEventListener.
@@ -51,30 +50,36 @@ public class DataChangedEventDispatcher implements ApplicationListener<DataChang
     }
 
     /**
+     * 事件接收
      *
-     * 事件接受
+     * 接收到事件后，针对不同的事件，调用对应的事件处理逻辑
      *
-     * @param event
+     *
      */
     @Override
     @SuppressWarnings("unchecked")
     public void onApplicationEvent(final DataChangedEvent event) {
         // 对所有的监听者广播
         for (DataChangedListener listener : listeners) {
-            // 针对不同的时间，使用不同的处理逻辑
+            // 针对不同的事件，使用不同的处理逻辑
             switch (event.getGroupKey()) {
+                // 授权信息
                 case APP_AUTH:
                     listener.onAppAuthChanged((List<AppAuthData>) event.getSource(), event.getEventType());
                     break;
+                // 插件信息
                 case PLUGIN:
                     listener.onPluginChanged((List<PluginData>) event.getSource(), event.getEventType());
                     break;
+                // 原则
                 case RULE:
                     listener.onRuleChanged((List<RuleData>) event.getSource(), event.getEventType());
                     break;
+                // 选择器
                 case SELECTOR:
                     listener.onSelectorChanged((List<SelectorData>) event.getSource(), event.getEventType());
                     break;
+                // 元数据
                 case META_DATA:
                     listener.onMetaDataChanged((List<MetaData>) event.getSource(), event.getEventType());
                     break;
@@ -84,6 +89,12 @@ public class DataChangedEventDispatcher implements ApplicationListener<DataChang
         }
     }
 
+    /**
+     *
+     * 监听者 注入
+     *
+     *
+     */
     @Override
     public void afterPropertiesSet() {
         Collection<DataChangedListener> listenerBeans = applicationContext.getBeansOfType(DataChangedListener.class).values();

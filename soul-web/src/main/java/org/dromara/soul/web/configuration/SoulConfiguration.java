@@ -70,6 +70,7 @@ public class SoulConfiguration {
     @Bean("webHandler")
     public SoulWebHandler soulWebHandler(final ObjectProvider<List<SoulPlugin>> plugins) {
         List<SoulPlugin> pluginList = plugins.getIfAvailable(Collections::emptyList);
+        // 根据order排序
         final List<SoulPlugin> soulPlugins = pluginList.stream()
                 .sorted(Comparator.comparingInt(SoulPlugin::getOrder)).collect(Collectors.toList());
         soulPlugins.forEach(soulPlugin -> log.info("loader plugin:[{}] [{}]", soulPlugin.named(), soulPlugin.getClass().getName()));

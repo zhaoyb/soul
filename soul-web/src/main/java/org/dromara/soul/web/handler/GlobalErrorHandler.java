@@ -38,6 +38,9 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 /**
  * GlobalErrorHandler.
  *
+ * 全局异常
+ *
+ *
  * @author xiaoyu(Myth)
  */
 public class GlobalErrorHandler extends DefaultErrorWebExceptionHandler {

@@ -26,6 +26,10 @@ import org.springframework.boot.CommandLineRunner;
 /**
  * The type Zookeeper data init.
  *
+ * CommandLineRunner 是在spring boot应用启动的时候运行
+ *
+ *
+ *
  * @author xiaoyu
  */
 public class ZookeeperDataInit implements CommandLineRunner {

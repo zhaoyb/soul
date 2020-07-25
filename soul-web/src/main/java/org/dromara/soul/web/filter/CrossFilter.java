@@ -32,6 +32,8 @@ import reactor.core.publisher.Mono;
 /**
  * The type Cross filter.
  *
+ * 跨域
+ *
  * @author xiaoyu(Myth)
  */
 public class CrossFilter implements WebFilter {

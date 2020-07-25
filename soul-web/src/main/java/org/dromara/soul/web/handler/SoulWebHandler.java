@@ -69,16 +69,24 @@ public final class SoulWebHandler implements WebHandler {
      */
     @Override
     public Mono<Void> handle(@NonNull final ServerWebExchange exchange) {
+        // 调用统计
         MetricsTrackerFacade.getInstance().counterInc(MetricsLabelEnum.REQUEST_TOTAL.getName());
         Optional<HistogramMetricsTrackerDelegate> startTimer = MetricsTrackerFacade.getInstance().histogramStartTimer(MetricsLabelEnum.REQUEST_LATENCY.getName());
+
         return new DefaultSoulPluginChain(plugins).execute(exchange).subscribeOn(scheduler)
                 .doOnSuccess(t -> startTimer.ifPresent(time -> MetricsTrackerFacade.getInstance().histogramObserveDuration(time)));
     }
-    
+
+    /**
+     *
+     * 插件调用链
+     *
+     */
     private static class DefaultSoulPluginChain implements SoulPluginChain {
         
         private int index;
-        
+
+        //插件集合
         private final List<SoulPlugin> plugins;
         
         /**
@@ -100,9 +108,12 @@ public final class SoulWebHandler implements WebHandler {
         public Mono<Void> execute(final ServerWebExchange exchange) {
             return Mono.defer(() -> {
                 if (this.index < plugins.size()) {
+                    // 需要执行的插件
                     SoulPlugin plugin = plugins.get(this.index++);
+                    // 是否跳过插件
                     Boolean skip = plugin.skip(exchange);
                     if (skip) {
+                        // 递归 调用，相当于跳过本次调用
                         return this.execute(exchange);
                     } else {
                         return plugin.execute(exchange, this);

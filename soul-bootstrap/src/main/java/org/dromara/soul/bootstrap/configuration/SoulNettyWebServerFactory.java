@@ -29,6 +29,7 @@ import reactor.netty.resources.LoopResources;
 
 /**
  * The type Soul netty web server factory.
+ * 自定义netty参数
  *
  * @author xiaoyu
  */

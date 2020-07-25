@@ -22,6 +22,7 @@ import org.springframework.web.server.ServerWebExchange;
 
 /**
  * The interface Sign service.
+ * 验签接口
  *
  * @author xiaoyu
  */

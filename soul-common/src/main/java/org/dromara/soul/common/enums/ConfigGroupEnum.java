@@ -31,24 +31,30 @@ public enum ConfigGroupEnum {
 
     /**
      * App auth config group enum.
+     * 授权信息
      */
     APP_AUTH,
 
 
     /**
      * Plugin config group enum.
+     * 插件信息
      */
     PLUGIN,
 
 
     /**
      * Rule config group enum.
+     *
+     * 规则配置信息
      */
     RULE,
 
 
     /**
      * Selector config group enum.
+     *
+     * 选择器配置信息
      */
     SELECTOR,
 

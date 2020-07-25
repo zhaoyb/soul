@@ -42,6 +42,11 @@ import org.springframework.stereotype.Service;
 /**
  * The type sync data service.
  *
+ * 数据同步服务 ， 其实这里还不能够叫事件同步， 只能说是事件通知，
+ * 利用 ApplicationEventPublisher，分离了事件的发布者和接收者
+ * DataChangedEventDispatcher接收到事件后，才开始真正的数据同步
+ *
+ *
  * @author xiaoyu(Myth)
  */
 @Service("syncDataService")
@@ -66,6 +71,11 @@ public class SyncDataServiceImpl implements SyncDataService {
      */
     private final RuleService ruleService;
 
+    /**
+     *
+     * spring 容器，eventpublisher, 用来发布事件
+     *
+     */
     private final ApplicationEventPublisher eventPublisher;
 
     /**
@@ -95,20 +105,25 @@ public class SyncDataServiceImpl implements SyncDataService {
 
     /**
      *
-     * 同步所有插件信息
+     * 同步所有插件信息    DataChangedEventDispatcher接收
      *
      * @param type the type
      * @return
      */
     @Override
     public boolean syncAll(final DataEventTypeEnum type) {
+        // 授权信息同步
         appAuthService.syncData();
+        //插件信息同步
         List<PluginData> pluginDataList = pluginService.listAll();
         eventPublisher.publishEvent(new DataChangedEvent(ConfigGroupEnum.PLUGIN, type, pluginDataList));
+        // 选择器同步
         List<SelectorData> selectorDataList = selectorService.listAll();
         eventPublisher.publishEvent(new DataChangedEvent(ConfigGroupEnum.SELECTOR, type, selectorDataList));
+        // 规则同步
         List<RuleData> ruleDataList = ruleService.listAll();
         eventPublisher.publishEvent(new DataChangedEvent(ConfigGroupEnum.RULE, type, ruleDataList));
+
         metaDataService.syncData();
         return true;
     }

@@ -61,15 +61,22 @@ public abstract class AbstractSoulPlugin implements SoulPlugin {
      * Process the Web request and (optionally) delegate to the next
      * {@code SoulPlugin} through the given {@link SoulPluginChain}.
      *
+     * 处理web请求
+     *
+     *
      * @param exchange the current server exchange
      * @param chain    provides a way to delegate to the next plugin
      * @return {@code Mono<Void>} to indicate when request processing is complete
      */
     @Override
     public Mono<Void> execute(final ServerWebExchange exchange, final SoulPluginChain chain) {
+        // 插件名称
         String pluginName = named();
+        // 插件配置数据
         final PluginData pluginData = BaseDataCache.getInstance().obtainPluginData(pluginName);
+        // 插件数据可用
         if (pluginData != null && pluginData.getEnabled()) {
+            // 选择器数据
             final Collection<SelectorData> selectors = BaseDataCache.getInstance().obtainSelectorData(pluginName);
             if (CollectionUtils.isEmpty(selectors)) {
                 return CheckUtils.checkSelector(pluginName, exchange, chain);
@@ -81,9 +88,11 @@ public abstract class AbstractSoulPlugin implements SoulPlugin {
                 }
                 return CheckUtils.checkSelector(pluginName, exchange, chain);
             }
+            // 打印日志
             if (selectorData.getLoged()) {
                 log.info("{} selector success match , selector name :{}", pluginName, selectorData.getName());
             }
+            // 路由规则数据
             final List<RuleData> rules = BaseDataCache.getInstance().obtainRuleData(selectorData.getId());
             if (CollectionUtils.isEmpty(rules)) {
                 if (PluginEnum.WAF.getName().equals(pluginName)) {

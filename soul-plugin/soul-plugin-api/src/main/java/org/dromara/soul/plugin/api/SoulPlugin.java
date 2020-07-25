@@ -23,6 +23,7 @@ import reactor.core.publisher.Mono;
 
 /**
  * the soul plugin interface.
+ * 插件接口类
  *
  * @author xiaoyu
  */
@@ -41,6 +42,7 @@ public interface SoulPlugin {
     /**
      * return plugin order .
      * This attribute To determine the plugin execution order in the same type plugin.
+     * 插件执行顺序
      *
      * @return int order
      */
@@ -50,6 +52,7 @@ public interface SoulPlugin {
      * acquire plugin name.
      * this is plugin name define you must Provide the right name.
      * if you impl AbstractSoulPlugin this attribute not use.
+     * 插件名称
      *
      * @return plugin name.
      */
@@ -60,6 +63,7 @@ public interface SoulPlugin {
     /**
      * plugin is execute.
      * if return true this plugin can not execute.
+     * 插件是否跳过
      *
      * @param exchange the current server exchange
      * @return default false.

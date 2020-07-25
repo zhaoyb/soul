@@ -28,6 +28,8 @@ import java.io.Serializable;
 /**
  * SoulAdminResult .
  *
+ * result 包装器
+ *
  * @author xiaoyu
  */
 @Data

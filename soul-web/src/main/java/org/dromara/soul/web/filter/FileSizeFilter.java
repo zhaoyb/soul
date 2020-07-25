@@ -48,6 +48,7 @@ import java.util.List;
 
 /**
  * The type File size filter.
+ * 文件大小限制
  *
  * @author xiaoyu(Myth)
  */
