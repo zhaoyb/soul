@@ -36,16 +36,22 @@ public final class BaseDataCache {
     
     /**
      * pluginName -> PluginData.
+     *
+     * 插件缓存
      */
     private static final ConcurrentMap<String, PluginData> PLUGIN_MAP = Maps.newConcurrentMap();
     
     /**
      * pluginName -> SelectorData.
+     *
+     * 选择器缓存
      */
     private static final ConcurrentMap<String, List<SelectorData>> SELECTOR_MAP = Maps.newConcurrentMap();
     
     /**
      * selectorId -> RuleData.
+     *
+     * 规则缓存
      */
     private static final ConcurrentMap<String, List<RuleData>> RULE_MAP = Maps.newConcurrentMap();
     

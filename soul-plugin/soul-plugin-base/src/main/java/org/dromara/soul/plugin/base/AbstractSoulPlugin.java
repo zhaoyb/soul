@@ -92,7 +92,7 @@ public abstract class AbstractSoulPlugin implements SoulPlugin {
             if (selectorData.getLoged()) {
                 log.info("{} selector success match , selector name :{}", pluginName, selectorData.getName());
             }
-            // 路由规则数据
+            // 根据选择器ID拿到规则数据
             final List<RuleData> rules = BaseDataCache.getInstance().obtainRuleData(selectorData.getId());
             if (CollectionUtils.isEmpty(rules)) {
                 if (PluginEnum.WAF.getName().equals(pluginName)) {

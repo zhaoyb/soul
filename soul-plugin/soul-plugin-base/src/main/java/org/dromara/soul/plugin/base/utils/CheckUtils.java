@@ -48,7 +48,7 @@ public class CheckUtils {
      * @return the mono
      */
     public static Mono<Void> checkSelector(final String pluginName, final ServerWebExchange exchange, final SoulPluginChain chain) {
-        // 如果是下面的插件，并且还路由规则，就直接抛异常
+        // 如果是下面的插件，并且没有对应路由规则，就直接抛异常
         if (PluginEnum.DIVIDE.getName().equals(pluginName)
                 || PluginEnum.DUBBO.getName().equals(pluginName)
                 || PluginEnum.SPRING_CLOUD.getName().equals(pluginName)) {
